@@ -1,0 +1,252 @@
+<!DOCTYPE html> 
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>足利Q&A教材</title>
+
+<style>
+body { margin:0; background:#f1f3f2; font-family:sans-serif; }
+.app { max-width:420px; margin:0 auto; background:#3e1956; height:100vh; display:flex; flex-direction:column; }
+
+header { 
+  background:#01550197; 
+  color:white; 
+  text-align:center; 
+  padding:12px; 
+}
+
+/* ▼ 言語ボタン専用 */
+.lang-buttons {
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  padding:5px;
+  background:#3e1956;
+}
+
+.lang-buttons button {
+  padding:8px 14px;
+  font-size:14px;
+  border-radius:8px;
+  border:none;
+  cursor:pointer;
+}
+
+#dialogueBox { flex:1; overflow-y:auto; padding:10px; }
+.line { display:flex; margin:8px 0; }
+.left{ justify-content:flex-start; }
+.right{ justify-content:flex-end; }
+.bubble { max-width:75%; padding:10px; border-radius:20px; font-weight:bold; }
+.left .bubble { background:#a7d5ec; }
+.right .bubble { background:#cfcda9; }
+.section { text-align:center; color:white; margin:10px; }
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header>足利Q&A（日英音声対応）</header>
+
+<!-- ▼ タイトル直下に配置 -->
+<div class="lang-buttons">
+  <button onclick="changeLang('EN')">English</button>
+  <button onclick="changeLang('JA')">日本語</button>
+</div>
+
+<div id="dialogueBox"></div>
+
+<script>
+
+// ===== 言語 =====
+let lang = "EN";
+
+// ===== データ =====
+
+const dialogueData = [
+
+{section:"足利の歴史 / Ashikaga History", no:1,
+q:{
+  JA:"足利で最も有名な史跡は何ですか？",
+  EN:"What is the most famous historical site in Ashikaga?"
+},
+a:[
+  {
+    JA:"それは足利学校で、日本最古で日本の最高学府学校の一つです。",
+    EN:"It is the Ashikaga School, one of the oldest and most prestigious academic institutions in Japan."
+  }
+]},
+
+{no:2,
+q:{
+  JA:"鑁阿寺はどのような寺院ですか？足利氏館跡には現在どのような寺がありますか？",
+  EN:"What kind of temple is Bannaji? What temple exists at the former Ashikaga clan residence?"
+},
+a:[
+  {
+    JA:"足利尊氏の子孫が邸宅内に建てた鑁阿寺があります。現在国宝になっています。",
+    EN:"Bannaji Temple was built by descendants of Ashikaga Takauji within the residence, and it is now a National Treasure."
+  }
+]},
+
+{no:3,
+q:{
+  JA:"足利の景観を形作る代表的な自然の主要な要素は何ですか？",
+  EN:"What is the main natural feature that shapes Ashikaga’s landscape?"
+},
+a:[
+  {
+    JA:"それは市内を流れる渡良瀬川です。",
+    EN:"It is the Watarase River that flows through the city."
+  }
+]},
+
+{no:4,
+q:{
+  JA:"本文には紹介されていないが陶磁器で有名な美術館があります、それは何ですか？行ったことはありますか？",
+  EN:"There is a museum famous for ceramics not mentioned in the text. What is it? Have you been there?"
+},
+a:[
+  {
+    JA:"栗田美術館です、はい行ったことがあります。",
+    EN:"It is the Kurita Museum. Yes, I have been there."
+  }
+]},
+
+{no:5,
+q:{
+  JA:"市内には花で有名な観光地があります、それはどこですか？",
+  EN:"There is a famous flower tourist spot in the city. Where is it?"
+},
+a:[
+  {
+    JA:"あしかがフラワーパークです。",
+    EN:"It is Ashikaga Flower Park."
+  }
+]},
+
+{no:6,
+q:{
+  JA:"４月のこの時期フラワーパークでの見ごろな花は何？",
+  EN:"What flowers are best to see in April at the flower park?"
+},
+a:[
+  {
+    JA:"藤の花です、特に園内には３５０本の藤が植えられていて今は見頃です、是非行ってみてください。",
+    EN:"Wisteria flowers. There are about 350 trees in the park, and they are in full bloom now. You should definitely visit."
+  }
+]},
+
+{no:7,
+q:{
+  JA:"「足利」と聞いて、多くの人が思い浮かべる歴史上の人物は誰ですか？",
+  EN:"When people hear 'Ashikaga', which historical figure do they think of?"
+},
+a:[
+  {
+    JA:"多くの人は足利尊氏を思い浮かべます。",
+    EN:"Many people think of Ashikaga Takauji."
+  }
+]},
+
+{no:8,
+q:{
+  JA:"足利尊氏はいつの時代のそしてどのような人物ですか？",
+  EN:"Who was Ashikaga Takauji and when did he live?"
+},
+a:[
+  {
+    JA:"鎌倉時代末期から室町時代初期にかけての人物で室町幕府を開いた人物です。",
+    EN:"He lived from the late Kamakura period to the early Muromachi period and founded the Muromachi Shogunate."
+  }
+]},
+
+{no:9,
+q:{
+  JA:"足利尊氏は南北朝時代のきっかけを作った人物ですが、最初どちらの側につきましたか？",
+  EN:"Ashikaga Takauji triggered the Nanboku-cho period. Which side did he initially support?"
+},
+a:[
+  {
+    JA:"当初は鎌倉幕府側に協力したが、その後対立して北朝側に転じ、室町幕府を開きました。",
+    EN:"He first supported the Kamakura side, but later switched sides and established the Muromachi Shogunate."
+  }
+]},
+
+{no:10,
+q:{
+  JA:"足利尊氏はなぜ日本史で重要人物ですか？",
+  EN:"Why is Ashikaga Takauji an important figure in Japanese history?"
+},
+a:[
+  {
+    JA:"新しい武士政権である室町幕府を築いたからです。",
+    EN:"Because he established a new samurai government, the Muromachi Shogunate."
+  }
+]}
+
+];
+
+
+
+const box = document.getElementById("dialogueBox");
+
+// ===== 描画 =====
+function render(){
+  box.innerHTML="";
+  dialogueData.forEach(item=>{
+    if(item.section){
+      box.innerHTML += `<div class="section">${item.section}</div>`;
+    }
+
+    box.innerHTML += `
+    <div class="line left">
+      <div class="bubble">
+        Q${item.no}. ${item.q[lang]}
+        <br>
+        <button onclick="playAudio('Q${item.no}')">🔊</button>
+      </div>
+    </div>
+
+    <div class="line right">
+      <div class="bubble">
+        <button onclick="showAnswer(${item.no})">回答</button>
+        <div id="a${item.no}"></div>
+      </div>
+    </div>
+    `;
+  });
+}
+
+// ===== 回答表示 =====
+function showAnswer(no){
+  const item = dialogueData.find(d=>d.no===no);
+  const div = document.getElementById("a"+no);
+
+  div.innerHTML = item.a.map((a,i)=>
+    `・${a[lang]} <button onclick="playAudio('Q${no}_A${i+1}')">🔊</button>`
+  ).join("<br>");
+}
+
+// ===== 音声 =====
+function playAudio(name){
+  const audio = new Audio("audio/"+name+"_"+lang+".mp3");
+  audio.play().catch(()=>console.log("音声なし:", name));
+}
+
+// ===== 言語切替 =====
+function changeLang(l){
+  lang = l;
+  render();
+}
+
+// 初期表示
+render();
+
+</script>
+
+</div>
+</body>
+</html>

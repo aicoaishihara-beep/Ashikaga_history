@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>足利市歴史教材</title>
+
+<style>
+body { margin:0; background:#f1f3f2; font-family:sans-serif; }
+
+.app {
+  max-width:420px;
+  margin:0 auto;
+  background:#185322;
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+
+/* ヘッダー */
+header {
+  background:#01550197;
+  color:white;
+  text-align:center;
+  padding:5px;
+  font-size:20px;
+}
+
+/* ===== 画像エリア（拡張＋重ね表示） ===== */
+#imageBox {
+  position:relative;
+  width:100%;
+  height:280px;   /* ← 大きくする */
+  overflow:hidden;
+}
+
+#imageBox img {
+  width:100%;
+  height:100%;
+  object-fit:cover; /* ← 重要：画面いっぱい表示 */
+}
+
+/* ★ タイトルを画像に重ねる */
+#overlayTitle {
+  position:absolute;
+  top:3px;
+  left:50px;
+  right:50px;
+  color:white;
+  font-size:25px;
+  font-weight:bold;
+  background:rgba(0,0,0,0.3);
+  padding:8px;
+  border-radius:5px;
+   text-align:center;   /* ← これを追加 */
+}
+
+/* 言語ボタン */
+#langButtons {
+  display:flex;
+  justify-content:space-around;
+  background:#466d5e;
+  padding:6px;
+}
+
+button {
+  font-size:12px;
+  padding:6px;
+  cursor:pointer;
+}
+
+/* スクリプト表示 */
+#scriptBox {
+  flex:1;
+  padding:15px;
+  background:rgb(213, 231, 171);
+  font-size:16px;
+  font-weight: bold;
+}
+
+#audioPlayer {
+  width:100%;
+  margin-top:10px;
+}
+
+/* ナビ */
+#nav {
+  display:flex;
+  justify-content:space-around;
+  background:#466d5e;
+  padding:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header>足利市歴史概観</header>
+
+<!-- ★ 画像＋タイトル重ね -->
+<div id="imageBox">
+  <img id="image">
+  <div id="overlayTitle"></div>
+</div>
+
+<div id="langButtons">
+  <button onclick="setLang('en')">EN</button>
+  <button onclick="setLang('jp')">日</button>
+  <button onclick="setLang('cn')">中</button>
+  <button onclick="setLang('pt')">POR</button>
+  <button onclick="setLang('vi')">VN</button>
+</div>
+
+<div id="scriptBox">
+  <div id="text"></div>
+  <audio id="audioPlayer" controls></audio>
+</div>
+
+<div id="nav">
+  <button onclick="prev()">⬅</button>
+  <button onclick="next()">➡</button>
+</div>
+
+</div>
+
+<script src="dialogue.js"></script>
+<script src="translations.js"></script>
+
+<script>
+
+let index = 0;
+let currentLang = "en";
+
+const langMap = {
+  en: "en",
+  jp: "ja",
+  cn: "zh",
+  pt: "pt",
+  vi: "vi"
+};
+
+const images = [
+"picture/no1_Introduction.png",
+"picture/no2_Ancient_Times.png",
+"picture/no3_Ashikaga_Clan.png",
+"picture/no4_Kamakura_Period.png",
+"picture/no5_Ashikaga_Takauji.png",
+"picture/no6_Ashikaga_school.png",
+"picture/no7_Sengoku_Period.png",
+"picture/no8_edo_period.png",
+"picture/no9_modern.png",
+"picture/no10_today.png",
+"picture/no11_sumary.png"
+];
+
+function update(){
+
+  const base = lessonData[index];
+
+  /* ★ タイトルを画像上に表示 */
+  document.getElementById("overlayTitle").innerText = base.title;
+
+  let text = "";
+
+  if(typeof translations !== "undefined" && translations[index]){
+    const langKey = langMap[currentLang];
+    text = translations[index][langKey];
+  }
+
+  if(!text){
+    text = base.text;
+  }
+
+  document.getElementById("text").innerText = text;
+
+  /* 画像 */
+  const img = document.getElementById("image");
+  img.onerror = () => img.src="https://via.placeholder.com/400x280?text=No+Image";
+  img.src = images[index];
+
+  /* 音声 */
+  const player = document.getElementById("audioPlayer");
+  const langKey = langMap[currentLang];
+  player.src = `audio/${index+1}_${langKey}.mp3`;
+}
+
+function setLang(lang){
+  currentLang = lang;
+  update();
+}
+
+function next(){
+  if(index < lessonData.length - 1){
+    index++;
+    update();
+  }
+}
+
+function prev(){
+  if(index > 0){
+    index--;
+    update();
+  }
+}
+
+window.onload = () => {
+  update();
+};
+
+</script>
+
+</body>
+</html>

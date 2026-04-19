@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>教材統合システム</title>
+
+<style>
+/* ===== 全体 ===== */
+body{
+  margin:0;
+  background:#ccc;
+  font-family:sans-serif;
+
+  display:flex;
+  justify-content:center;   /* ★中央配置 */
+}
+
+/* ===== スマホ枠（最重要） ===== */
+#appContainer{
+  width:100%;
+  max-width:420px;          /* ★スマホ幅 */
+  height:100vh;
+  background:white;
+
+  display:flex;
+  flex-direction:column;
+}
+
+/* ===== メニュー（黒バー） ===== */
+#menu{
+  background:#333;
+  padding:3px;
+
+  display:flex;
+  justify-content:center;   /* ★ボタン中央 */
+  gap:5px;
+  flex-wrap:wrap;
+
+  position:sticky;          /* ★上部固定（おすすめ） */
+  top:0;
+}
+
+/* ===== ボタン ===== */
+button{
+  font-size:10px;
+  font-weight:bold;
+  padding:10px 14px;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+/* ===== スマホ微調整 ===== */
+@media (max-width:600px){
+  button{
+    font-size:16px;
+    padding:8px 10px;
+  }
+}
+
+/* ===== 表示エリア ===== */
+#viewer{
+  flex:1;
+  width:100%;
+  border:none;
+}
+</style>
+</head>
+
+<body>
+
+<div id="appContainer">
+
+  <div id="menu">
+    <button onclick="loadPage('dialogue')">語り</button>
+    <button onclick="loadPage('qa')">Q&A</button>
+  </div>
+
+  <iframe id="viewer"></iframe>
+
+</div>
+
+<script>
+function loadPage(type){
+
+  const frame = document.getElementById("viewer");
+
+  if(type === "dialogue"){
+    frame.src = "./語り_github/index.html";
+  }
+
+  if(type === "qa"){
+    frame.src = "./質問_github/index.html";
+  }
+}
+
+/* 初期表示 */
+loadPage('dialogue');
+</script>
+
+</body>
+</html>
